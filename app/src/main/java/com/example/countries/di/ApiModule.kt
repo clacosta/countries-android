@@ -1,6 +1,7 @@
 package com.example.countries.di
 
 import com.example.countries.model.CountriesApi
+import com.example.countries.model.CountriesService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -20,6 +21,11 @@ class ApiModule {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(CountriesApi::class.java)
+    }
+
+    @Provides
+    fun provideCountriesService(): CountriesService {
+        return CountriesService()
     }
 
 }

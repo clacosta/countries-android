@@ -2,16 +2,24 @@ package com.example.countries.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.countries.di.DaggerApiComponent
 import com.example.countries.model.CountriesService
 import com.example.countries.model.Country
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListViewModel : ViewModel() {
 
-    private val countriesService = CountriesService()
+    @Inject
+    lateinit var countriesService: CountriesService
+
+    init {
+        DaggerApiComponent.create().inject(this)
+    }
+
     private val disposable = CompositeDisposable()
 
     val countries = MutableLiveData<List<Country>>()
@@ -34,6 +42,7 @@ class ListViewModel : ViewModel() {
                         countryLoadErro.value = false
                         loading.value = false
                     }
+
                     override fun onError(e: Throwable?) {
                         countryLoadErro.value = true
                         loading.value = false

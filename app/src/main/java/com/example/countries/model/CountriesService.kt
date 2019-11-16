@@ -10,7 +10,7 @@ class CountriesService {
     lateinit var api: CountriesApi
 
     init {
-        DaggerApiComponent.create().injenct(this)
+        DaggerApiComponent.create().inject(this)
     }
 
     fun getCountries(): Single<List<Country>> {
