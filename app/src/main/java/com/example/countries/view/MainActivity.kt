@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
                 if (it) {
                     list_erro.visibility = View.GONE
                     countries_recyclerview.visibility = View.GONE
-                } else {
-                    
                 }
             }
         })
