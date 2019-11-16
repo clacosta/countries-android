@@ -1,9 +1,8 @@
-package com.example.countries
+package com.example.countries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.countries.model.CountriesService
 import com.example.countries.model.Country
-import com.example.countries.viewmodel.ListViewModel
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -35,11 +34,6 @@ class ListViewModelTest {
     private var testSingle: Single<List<Country>>? = null
 
     @Before
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
-    }
-
-    @Before
     fun setUpRxScheduler() {
         val immediate = object : Scheduler() {
             override fun scheduleDirect(run: Runnable?, delay: Long, unit: TimeUnit?): Disposable {
@@ -57,6 +51,11 @@ class ListViewModelTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> immediate }
     }
 
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+    }
+
     @Test
     fun getCountriesSuccess() {
         val country = Country("countryName", "capital", "url")
@@ -66,6 +65,15 @@ class ListViewModelTest {
         listViewModel.refresh()
         assertEquals(1, listViewModel.countries.value?.size)
         assertEquals(false, listViewModel.countryLoadErro.value)
+        assertEquals(false, listViewModel.loading.value)
+    }
+
+    @Test
+    fun getCountriesFail() {
+        testSingle = Single.error(Throwable())
+        `when`(countriesService.getCountries()).thenReturn(testSingle)
+        listViewModel.refresh()
+        assertEquals(true, listViewModel.countryLoadErro.value)
         assertEquals(false, listViewModel.loading.value)
     }
 
