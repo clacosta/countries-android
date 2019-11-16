@@ -24,12 +24,17 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = countriesAdapter
         }
+        swipe_refresh_layout.setOnRefreshListener {
+            swipe_refresh_layout.isRefreshing = false
+            viewModel.refresh()
+        }
         observeViewModel()
     }
 
     fun observeViewModel() {
         viewModel.countries.observe(this, Observer { countries ->
             countries?.let {
+                countries_recyclerview.visibility = View.VISIBLE
                 countriesAdapter.updateCountries(it)
             }
         })
@@ -44,8 +49,6 @@ class MainActivity : AppCompatActivity() {
                 if (it) {
                     list_erro.visibility = View.GONE
                     countries_recyclerview.visibility = View.GONE
-                } else {
-                    
                 }
             }
         })
